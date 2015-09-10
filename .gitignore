@@ -59,3 +59,9 @@ target/
 
 # OS X
 .DS_Store
+
+# SQLite
+*.sqlite
+
+# Project-specific
+emails/

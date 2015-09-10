@@ -12,10 +12,54 @@ The State Department is in the midst of conducting a Freedom of Information Act 
 
 The code contained in this repo can be used to download the PDFs distributed by the State Department, extract plain text from those PDFs, and store that text in a database for use when performing analysis.
 
-To get started, create a new virtual environment and install the included requirements:
+To get started, create a new virtual environment and install the included requirements.
 
-```python
+```
 $ pip install -r requirements.txt
 ```
 
-More to follow.
+This project uses [Celery](http://celery.readthedocs.org/en/latest/) to asynchronously download the PDFs distributed by the State Department. Celery requires a solution to send and receive messages which typically comes in the form of a separate service called a message broker. This project uses [RabbitMQ](http://www.rabbitmq.com/) as a message broker. On OS X, use Homebrew to install it.
+
+```
+$ brew install rabbitmq
+```
+
+By default, most operating systems don't allow enough open files for a message broker. RabbitMQ's docs indicate that allowing at least 4096 file descriptors should be sufficient for most development workloads. Check the limit on the number of file descriptors in your current process by running:
+
+```
+$ ulimit -n
+```
+
+If it needs to be adjusted, run:
+
+```
+$ ulimit -n 4096
+```
+
+Next, start the RabbitMQ server.
+
+```
+$ rabbitmq-server
+```
+
+In a separate process, change into the `clinton` package and start the Celery worker.
+
+```
+$ cd clinton
+$ celery -A clinton worker --app=celery_app:app --loglevel=info
+```
+
+In a third process, change into the `clinton` package and run the document procurement script. It takes about 10 minutes to download all 7,945 PDFs available as of the State Department's August release.
+
+```
+$ cd clinton
+$ python procure.py
+```
+
+If you're forced to shut down the Celery workers prematurely, tasks may remain in the queue. To clear them, you can reset RabbitMQ.
+
+```
+$ rabbitmqctl stop_app
+$ rabbitmqctl reset
+$ rabbitmqctl start_app
+```
