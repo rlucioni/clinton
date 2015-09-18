@@ -5,7 +5,7 @@ app = Celery(
     'clinton',
     broker='amqp://',
     backend='amqp://',
-    include=['tasks']
+    include=['clinton.tasks']
 )
 
 app.conf.update(

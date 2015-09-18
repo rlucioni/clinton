@@ -42,11 +42,10 @@ Next, start the RabbitMQ server.
 $ rabbitmq-server
 ```
 
-In a separate process, change into the `clinton` package and start the Celery worker.
+In a separate process, start the Celery worker.
 
 ```
-$ cd clinton
-$ celery -A clinton worker --app=celery_app:app --loglevel=info
+$ make worker
 ```
 
 In a third process, change into the `clinton` package and run the document procurement script. It takes about 10 minutes to download all 7,945 PDFs available as of the State Department's August release.
