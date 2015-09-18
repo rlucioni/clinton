@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -22,6 +22,7 @@ class Email(Base):
     case_number = Column(String)
     document_class = Column(String)
     document_id = Column(String)
+    is_redacted = Column(Boolean)
 
     def __repr__(self):
         return '<Email(sender={}, recipient={}, sent={}, subject={}, document_id={})>'.format(

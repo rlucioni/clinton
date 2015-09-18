@@ -72,33 +72,36 @@ def process_records(records):
     for result in results:
         data = result.get()
 
-        sender = data['from']
-        recipient = data['to']
-        sent = data['sent']
-        subject = data['subject']
-        body = data['body']
-        pdf_path = data['pdf_path']
-        pdf_link = data['pdf_link']
-        pdf_posted = data['pdf_posted']
-        case_number = data['caseNumber']
-        document_class = data['documentClass']
-        document_id = data['document_id']
+        if data is not None:
+            sender = data['from']
+            recipient = data['to']
+            sent = data['sent']
+            subject = data['subject']
+            body = data['body']
+            pdf_path = data['pdf_path']
+            pdf_link = data['pdf_link']
+            pdf_posted = data['pdf_posted']
+            case_number = data['caseNumber']
+            document_class = data['documentClass']
+            document_id = data['document_id']
+            is_redacted = data['is_redacted']
 
-        email = Email(
-            sender=sender,
-            recipient=recipient,
-            sent=sent,
-            subject=subject,
-            body=body,
-            pdf_path=pdf_path,
-            pdf_link=pdf_link,
-            pdf_posted=pdf_posted,
-            case_number=case_number,
-            document_class=document_class,
-            document_id=document_id,
-        )
+            email = Email(
+                sender=sender,
+                recipient=recipient,
+                sent=sent,
+                subject=subject,
+                body=body,
+                pdf_path=pdf_path,
+                pdf_link=pdf_link,
+                pdf_posted=pdf_posted,
+                case_number=case_number,
+                document_class=document_class,
+                document_id=document_id,
+                is_redacted=is_redacted,
+            )
 
-        emails.append(email)
+            emails.append(email)
 
     # Bulk insert for improved performance.
     session.add_all(emails)
